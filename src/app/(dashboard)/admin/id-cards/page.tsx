@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import prisma from "@/lib/prisma";
+
+export const dynamic = "force-dynamic";
 import { formatDate } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
