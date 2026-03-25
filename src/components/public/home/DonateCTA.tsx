@@ -15,36 +15,57 @@ export function DonateCTA({ settings }: DonateCTAProps) {
     const presetAmounts = (settings.donate_amounts || "500,1000,2000,5000").split(",");
 
     return (
-        <section className="py-20 relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900">
-            {/* Background decoration */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-amber-400/10 blur-3xl" />
-                <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl" />
+        <section className="py-32 relative overflow-hidden bg-[#0f172a]">
+            {/* Soft dark paper noise overlay */}
+            <div 
+                className="absolute inset-0 opacity-[0.3] pointer-events-none mix-blend-overlay"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+            {/* Background glowing artistic decoration */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none mix-blend-screen">
+                <motion.div 
+                    animate={{ rotate: 360, scale: [1, 1.2, 1] }} 
+                    transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+                    className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-amber-500/10 filter blur-[100px]" 
+                />
+                <motion.div 
+                    animate={{ rotate: -360, scale: [1, 1.1, 1] }} 
+                    transition={{ duration: 60, repeat: Infinity, ease: "linear", delay: 1 }}
+                    className="absolute -bottom-32 -left-32 w-[600px] h-[600px] rounded-full bg-blue-500/10 filter blur-[100px]" 
+                />
             </div>
 
-            <div className="container mx-auto px-4 max-w-4xl text-center relative z-10">
+            <div className="container mx-auto px-6 max-w-5xl text-center relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <div className="w-16 h-16 rounded-full bg-amber-400/20 flex items-center justify-center mx-auto mb-6">
-                        <Heart className="w-8 h-8 text-amber-400 fill-amber-400" />
+                    <div className="w-16 h-16 rounded-full bg-slate-800/50 border border-slate-700/50 flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(251,191,36,0.1)]">
+                        <Heart className="w-6 h-6 text-amber-400 fill-amber-400/50" />
                     </div>
-                    <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
+                    
+                    <p className="font-serif italic text-amber-500 text-xl tracking-wide mb-4">
+                        Join Our Mission
+                    </p>
+                    <h2 className="font-serif text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
                         {heading}
                     </h2>
-                    <p className="text-blue-200 text-xl mb-8 max-w-xl mx-auto">{subtext}</p>
+                    <p className="text-slate-400 text-xl mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+                        {subtext}
+                    </p>
 
-                    {/* Preset amounts */}
-                    <div className="flex flex-wrap gap-3 justify-center mb-8">
+                    {/* Elegant Preset amounts */}
+                    <div className="flex flex-wrap gap-4 justify-center mb-12">
                         {presetAmounts.map((amount) => (
                             <Link key={amount} href={`/donate?amount=${amount}`}>
                                 <motion.button
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="bg-white/10 hover:bg-amber-400 border border-white/20 hover:border-amber-400 text-white font-bold px-6 py-3 rounded-xl transition-all duration-200 text-lg"
+                                    className="bg-slate-800/40 hover:bg-slate-800 border-2 border-slate-700 hover:border-amber-500/50 text-slate-300 hover:text-white font-medium px-8 py-4 rounded-full transition-all duration-300 text-lg shadow-none hover:shadow-[0_0_20px_rgba(251,191,36,0.15)]"
                                 >
                                     ₹{parseInt(amount).toLocaleString("en-IN")}
                                 </motion.button>
@@ -54,7 +75,7 @@ export function DonateCTA({ settings }: DonateCTAProps) {
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold px-6 py-3 rounded-xl transition-all duration-200"
+                                className="bg-transparent hover:bg-slate-800/60 border-2 border-slate-700 hover:border-slate-500 text-slate-400 font-medium px-8 py-4 rounded-full transition-all duration-300 text-lg"
                             >
                                 Custom ₹
                             </motion.button>
@@ -62,15 +83,15 @@ export function DonateCTA({ settings }: DonateCTAProps) {
                     </div>
 
                     <Link href="/donate">
-                        <Button size="lg" className="bg-amber-500 hover:bg-amber-400 text-white font-bold px-10 py-6 text-lg shadow-xl shadow-amber-500/20">
-                            <Heart className="w-5 h-5 mr-2 fill-white" />
+                        <Button className="bg-amber-500 hover:bg-amber-400 text-slate-900 rounded-full px-12 py-8 text-xl font-bold transition-all duration-300 hover:scale-105 group border-none shadow-[0_0_40px_-10px_rgba(245,158,11,0.5)]">
+                            <Heart className="w-5 h-5 mr-3 fill-slate-900 transition-transform group-hover:scale-110" />
                             Donate Now
-                            <ArrowRight className="w-5 h-5 ml-2" />
+                            <ArrowRight className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1" />
                         </Button>
                     </Link>
 
-                    <p className="mt-4 text-sm text-blue-300">
-                        Tax benefits under 80G of Income Tax Act · Secure payment via Razorpay
+                    <p className="mt-8 text-sm text-slate-500 tracking-wide font-light">
+                        Tax benefits under 80G of Income Tax Act <span className="mx-2 text-slate-700">•</span> Secure payment via Razorpay
                     </p>
                 </motion.div>
             </div>

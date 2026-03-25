@@ -43,47 +43,57 @@ export default async function MemberDashboardPage() {
     const activeIdCard = await prisma.iDCard.findFirst({ where: { memberId: member.id, isActive: true } });
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto">
+        <div className="space-y-8 max-w-5xl mx-auto relative z-10 pb-10">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] bg-amber-400/10 rounded-full blur-3xl pointer-events-none -z-10" />
+            <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[600px] h-[600px] bg-blue-300/10 rounded-full blur-3xl pointer-events-none -z-10" />
+
             {/* Welcome banner */}
-            <div className="bg-gradient-to-r from-blue-800 to-blue-700 rounded-2xl p-6 text-white">
-                <p className="text-blue-200 text-sm mb-1">Welcome back,</p>
-                <h1 className="font-serif text-2xl font-bold">{member.user.name}</h1>
-                <div className="flex items-center gap-3 mt-2">
-                    <code className="text-blue-200 text-sm">{member.memberId}</code>
-                    <span className="text-blue-300">·</span>
-                    <Badge className={`${member.isApproved ? "bg-emerald-500/20 text-emerald-200 border-emerald-500/30" : "bg-orange-500/20 text-orange-200 border-orange-500/30"} border text-xs`}>
-                        {member.isApproved ? (
-                            <><CheckCircle className="w-3 h-3 mr-1" /> Approved</>
-                        ) : (
-                            <><Clock className="w-3 h-3 mr-1" /> Pending Approval</>
-                        )}
-                    </Badge>
+            <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] p-8 sm:p-10 text-white shadow-xl shadow-slate-900/10 border border-slate-800">
+                <div className="absolute top-0 right-0 -translate-y-1/3 translate-x-1/3 w-[500px] h-[500px] bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+                
+                <div className="relative z-10">
+                    <p className="text-amber-400 font-bold uppercase tracking-widest text-xs mb-2">Welcome back,</p>
+                    <h1 className="font-serif text-4xl sm:text-5xl font-bold tracking-tight mb-4">{member.user.name}</h1>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <code className="bg-slate-800/80 px-3 py-1.5 rounded-lg text-slate-300 font-medium text-sm border border-slate-700">{member.memberId}</code>
+                        <span className="text-slate-600 hidden sm:inline">•</span>
+                        <Badge className={`${member.isApproved ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-orange-500/20 text-orange-400 border-orange-500/30"} px-3 py-1.5 rounded-lg uppercase tracking-wider text-[10px] font-bold border`}>
+                            {member.isApproved ? (
+                                <><CheckCircle className="w-3.5 h-3.5 mr-1.5" /> Approved</>
+                            ) : (
+                                <><Clock className="w-3.5 h-3.5 mr-1.5" /> Pending Approval</>
+                            )}
+                        </Badge>
+                    </div>
+                    {!member.isApproved && (
+                        <p className="text-slate-400 text-sm mt-4 font-medium max-w-md">
+                            Your membership application is currently under review. We will notify you via email once it has been processed.
+                        </p>
+                    )}
                 </div>
-                {!member.isApproved && (
-                    <p className="text-blue-200 text-xs mt-2">
-                        Your membership is under review. You&apos;ll receive an email once approved.
-                    </p>
-                )}
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 {[
-                    { label: "Total Donated", value: formatCurrency(totalDonated._sum.amount || 0), icon: Heart, color: "text-rose-600 bg-rose-50" },
-                    { label: "Certificates", value: certCount, icon: Award, color: "text-emerald-700 bg-emerald-50" },
-                    { label: "ID Card", value: activeIdCard ? "Active" : "Not Issued", icon: CreditCard, color: "text-blue-700 bg-blue-50" },
+                    { label: "Total Donated", value: formatCurrency(totalDonated._sum.amount || 0), icon: Heart, color: "text-rose-600 bg-rose-50 border-rose-100" },
+                    { label: "Certificates", value: certCount, icon: Award, color: "text-emerald-700 bg-emerald-50 border-emerald-100" },
+                    { label: "ID Card Status", value: activeIdCard ? "Active" : "Not Issued", icon: CreditCard, color: "text-blue-700 bg-blue-50 border-blue-100" },
                 ].map((stat) => {
                     const Icon = stat.icon;
-                    const [iconColor, bgColor] = stat.color.split(" ");
+                    const [iconColor, bgColor, borderColor] = stat.color.split(" ");
                     return (
-                        <Card key={stat.label} className="shadow-sm border-0">
-                            <CardContent className="p-4 flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-xl ${bgColor} flex items-center justify-center`}>
-                                    <Icon className={`w-5 h-5 ${iconColor}`} />
-                                </div>
-                                <div>
-                                    <p className="text-lg font-bold text-slate-900">{stat.value}</p>
-                                    <p className="text-xs text-slate-500">{stat.label}</p>
+                        <Card key={stat.label} className="bg-white/70 backdrop-blur-md rounded-3xl border border-white shadow-lg shadow-slate-200/20 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <CardContent className="p-6">
+                                <div className="flex items-center gap-5">
+                                    <div className={`w-14 h-14 rounded-2xl ${bgColor} border ${borderColor} flex items-center justify-center shadow-inner`}>
+                                        <Icon className={`w-6 h-6 ${iconColor}`} strokeWidth={1.5} />
+                                    </div>
+                                    <div>
+                                        <p className="text-2xl font-bold text-slate-800 tracking-tight">{stat.value}</p>
+                                        <p className="text-[11px] uppercase tracking-widest font-bold text-slate-400 mt-1">{stat.label}</p>
+                                    </div>
                                 </div>
                             </CardContent>
                         </Card>
@@ -91,68 +101,84 @@ export default async function MemberDashboardPage() {
                 })}
             </div>
 
-            {/* Donation History */}
-            {member.donations.length > 0 && (
-                <Card className="shadow-sm border-0">
-                    <CardHeader className="pb-3 flex-row items-center justify-between">
-                        <CardTitle className="text-base">Recent Donations</CardTitle>
-                        <Link href="/member/donations"><Button variant="ghost" size="sm" className="text-blue-700">View All</Button></Link>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {member.donations.map((donation) => (
-                                <div key={donation.id} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
-                                    <div>
-                                        <p className="text-sm font-medium text-slate-800">{donation.purpose || "General Fund"}</p>
-                                        <p className="text-xs text-slate-400">{donation.receiptNumber} · {donation.paidAt ? formatDate(donation.paidAt) : ""}</p>
-                                    </div>
-                                    <p className="font-bold text-emerald-700 text-sm">{formatCurrency(donation.amount)}</p>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Donation History */}
+                    {member.donations.length > 0 && (
+                        <Card className="bg-white/70 backdrop-blur-md rounded-3xl border border-white shadow-lg shadow-slate-200/20 overflow-hidden">
+                            <CardHeader className="pb-4 border-b border-slate-100/50 bg-white/40 flex-row items-center justify-between">
+                                <CardTitle className="text-[15px] font-bold text-slate-800 uppercase tracking-widest flex items-center gap-3">
+                                    <Heart className="w-5 h-5 text-amber-600" strokeWidth={1.5} />
+                                    Recent Donations
+                                </CardTitle>
+                                <Link href="/member/donations">
+                                    <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-50 hover:text-amber-800 font-bold uppercase tracking-wider text-[10px] rounded-xl">View All</Button>
+                                </Link>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <div className="divide-y divide-slate-100/60">
+                                    {member.donations.map((donation) => (
+                                        <div key={donation.id} className="flex justify-between items-center p-5 hover:bg-white/40 transition-colors">
+                                            <div>
+                                                <p className="text-[15px] font-bold text-slate-800">{donation.purpose || "General Fund"}</p>
+                                                <p className="text-xs font-medium text-slate-400 mt-0.5 tracking-wide">{donation.receiptNumber} <span className="text-amber-500/50 mx-1">•</span> {donation.paidAt ? formatDate(donation.paidAt) : ""}</p>
+                                            </div>
+                                            <p className="text-lg font-bold text-emerald-600 tracking-tight">{formatCurrency(donation.amount)}</p>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                            </CardContent>
+                        </Card>
+                    )}
 
-            {/* Certificates */}
-            {member.certificates.length > 0 && (
-                <Card className="shadow-sm border-0">
-                    <CardHeader className="pb-3 flex-row items-center justify-between">
-                        <CardTitle className="text-base">My Certificates</CardTitle>
-                        <Link href="/member/certificates"><Button variant="ghost" size="sm" className="text-blue-700">View All</Button></Link>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {member.certificates.map((cert) => (
-                                <div key={cert.id} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
-                                    <div>
-                                        <p className="text-sm font-medium text-slate-800">{cert.title}</p>
-                                        <p className="text-xs text-slate-400">{cert.certificateNo} · {formatDate(cert.issueDate)}</p>
-                                    </div>
-                                    <Badge variant="outline" className="text-xs">{cert.type}</Badge>
+                    {/* Certificates */}
+                    {member.certificates.length > 0 && (
+                        <Card className="bg-white/70 backdrop-blur-md rounded-3xl border border-white shadow-lg shadow-slate-200/20 overflow-hidden">
+                            <CardHeader className="pb-4 border-b border-slate-100/50 bg-white/40 flex-row items-center justify-between">
+                                <CardTitle className="text-[15px] font-bold text-slate-800 uppercase tracking-widest flex items-center gap-3">
+                                    <Award className="w-5 h-5 text-amber-600" strokeWidth={1.5} />
+                                    My Certificates
+                                </CardTitle>
+                                <Link href="/member/certificates">
+                                    <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-50 hover:text-amber-800 font-bold uppercase tracking-wider text-[10px] rounded-xl">View All</Button>
+                                </Link>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <div className="divide-y divide-slate-100/60">
+                                    {member.certificates.map((cert) => (
+                                        <div key={cert.id} className="flex justify-between items-center p-5 hover:bg-white/40 transition-colors">
+                                            <div>
+                                                <p className="text-[15px] font-bold text-slate-800">{cert.title}</p>
+                                                <p className="text-xs font-medium text-slate-400 mt-0.5 tracking-wide">{cert.certificateNo} <span className="text-amber-500/50 mx-1">•</span> {formatDate(cert.issueDate)}</p>
+                                            </div>
+                                            <Badge variant="outline" className="border-amber-200 bg-amber-50 text-amber-700 rounded-lg px-2.5 py-0.5 font-bold uppercase text-[9px] tracking-wider">{cert.type}</Badge>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
 
-            {/* Quick links */}
-            <div className="grid grid-cols-2 gap-4">
-                <Link href="/donate">
-                    <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-5 text-white cursor-pointer hover:shadow-lg transition-shadow">
-                        <Heart className="w-8 h-8 fill-white mb-2" />
-                        <p className="font-semibold">Donate Now</p>
-                        <p className="text-xs text-amber-200 mt-0.5">Support our mission</p>
-                    </div>
-                </Link>
-                <Link href="/member/id-card">
-                    <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded-2xl p-5 text-white cursor-pointer hover:shadow-lg transition-shadow">
-                        <CreditCard className="w-8 h-8 mb-2" />
-                        <p className="font-semibold">My ID Card</p>
-                        <p className="text-xs text-blue-200 mt-0.5">Download or view</p>
-                    </div>
-                </Link>
+                {/* Quick links */}
+                <div className="space-y-4">
+                    <Link href="/donate" className="block">
+                        <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-[2rem] p-8 text-white cursor-pointer shadow-lg shadow-amber-500/20 hover:shadow-xl hover:shadow-amber-500/30 transition-all hover:-translate-y-1 relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700" />
+                            <Heart className="w-10 h-10 text-white mb-4 relative z-10" strokeWidth={1.5} />
+                            <p className="font-serif text-2xl font-bold mb-1 relative z-10">Donate Now</p>
+                            <p className="text-sm text-amber-100 font-medium relative z-10">Support our mission</p>
+                        </div>
+                    </Link>
+                    <Link href="/member/id-card" className="block">
+                        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-[2rem] p-8 text-white cursor-pointer shadow-lg shadow-slate-900/20 hover:shadow-xl hover:shadow-slate-900/30 transition-all hover:-translate-y-1 relative overflow-hidden group border border-slate-700">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-700" />
+                            <CreditCard className="w-10 h-10 text-amber-500 mb-4 relative z-10" strokeWidth={1.5} />
+                            <p className="font-serif text-2xl font-bold mb-1 relative z-10">My ID Card</p>
+                            <p className="text-sm text-slate-400 font-medium relative z-10">Download or view</p>
+                        </div>
+                    </Link>
+                </div>
             </div>
         </div>
     );

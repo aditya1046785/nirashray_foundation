@@ -27,21 +27,34 @@ export function Footer({ settings }: FooterProps) {
     ].filter((s) => s.url);
 
     return (
-        <footer className="bg-slate-900 text-slate-300">
+        <footer className="bg-[#0b1121] text-slate-400 relative overflow-hidden">
+            {/* Deep artistic mesh overlay */}
+            <div 
+                className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-overlay"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+            
+            <div className="absolute -top-[100px] -right-[100px] w-96 h-96 bg-amber-500/5 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute -bottom-[100px] -left-[100px] w-96 h-96 bg-blue-500/5 rounded-full blur-[80px] pointer-events-none" />
+
             {/* Main Footer */}
-            <div className="container mx-auto px-4 max-w-7xl py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="container mx-auto px-6 max-w-7xl py-20 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8">
                     {/* Brand */}
-                    <div className="lg:col-span-1">
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-full overflow-hidden shrink-0">
-                                <Image src="/favicon.ico" alt="Nirashray Foundation Logo" width={40} height={40} className="w-full h-full object-cover" />
+                    <div className="lg:col-span-4 lg:pr-8">
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-slate-700">
+                                <Image src="/favicon.ico" alt={`${siteName} Logo`} width={48} height={48} className="w-full h-full object-cover" />
                             </div>
-                            <span className="font-serif font-bold text-white text-lg">{siteName}</span>
+                            <span className="font-serif font-bold text-white text-2xl tracking-tight">{siteName}</span>
                         </div>
-                        <p className="text-sm text-slate-400 leading-relaxed mb-4">{footerDesc}</p>
+                        <p className="text-base text-slate-400 leading-relaxed mb-6 font-light">{footerDesc}</p>
                         {settings.registration_number && (
-                            <p className="text-xs text-slate-500 mb-4">Reg. No: {settings.registration_number}</p>
+                            <div className="inline-block border border-slate-700/50 bg-slate-800/30 px-3 py-1.5 rounded-md mb-8">
+                                <p className="text-xs text-amber-400/80 font-medium tracking-wide">REG. NO: {settings.registration_number}</p>
+                            </div>
                         )}
                         {/* Social links */}
                         {socialLinks.length > 0 && (
@@ -53,9 +66,9 @@ export function Footer({ settings }: FooterProps) {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         aria-label={label}
-                                        className="w-8 h-8 rounded-full bg-slate-700 hover:bg-blue-700 flex items-center justify-center transition-colors"
+                                        className="w-10 h-10 rounded-full border border-slate-700/50 hover:bg-amber-500 hover:border-amber-500 hover:text-slate-900 flex items-center justify-center transition-all duration-300 group"
                                     >
-                                        <Icon className="w-4 h-4 text-white" />
+                                        <Icon className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors" />
                                     </a>
                                 ))}
                             </div>
@@ -63,16 +76,16 @@ export function Footer({ settings }: FooterProps) {
                     </div>
 
                     {/* Quick Links */}
-                    <div>
-                        <h3 className="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Quick Links</h3>
-                        <ul className="space-y-2">
+                    <div className="lg:col-span-2 lg:col-start-6">
+                        <h3 className="font-serif font-bold text-white mb-6 text-xl">Quick Links</h3>
+                        <ul className="space-y-4">
                             {quickLinks.map((link) => (
                                 <li key={link.url}>
                                     <Link
                                         href={link.url}
-                                        className="text-slate-400 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                                        className="text-slate-400 hover:text-amber-400 text-base transition-colors hover:pl-2 duration-300 inline-block font-light"
                                     >
-                                        → {link.label}
+                                        {link.label}
                                     </Link>
                                 </li>
                             ))}
@@ -80,9 +93,9 @@ export function Footer({ settings }: FooterProps) {
                     </div>
 
                     {/* Get Involved */}
-                    <div>
-                        <h3 className="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Get Involved</h3>
-                        <ul className="space-y-2">
+                    <div className="lg:col-span-2">
+                        <h3 className="font-serif font-bold text-white mb-6 text-xl">Get Involved</h3>
+                        <ul className="space-y-4">
                             {[
                                 { label: "Become a Member", url: "/register" },
                                 { label: "Donate Now", url: "/donate" },
@@ -93,9 +106,9 @@ export function Footer({ settings }: FooterProps) {
                                 <li key={link.url}>
                                     <Link
                                         href={link.url}
-                                        className="text-slate-400 hover:text-white text-sm transition-colors hover:translate-x-1 inline-block"
+                                        className="text-slate-400 hover:text-amber-400 text-base transition-colors hover:pl-2 duration-300 inline-block font-light"
                                     >
-                                        → {link.label}
+                                        {link.label}
                                     </Link>
                                 </li>
                             ))}
@@ -103,42 +116,50 @@ export function Footer({ settings }: FooterProps) {
                     </div>
 
                     {/* Contact Info */}
-                    <div>
-                        <h3 className="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Contact</h3>
-                        <ul className="space-y-3">
+                    <div className="lg:col-span-3">
+                        <h3 className="font-serif font-bold text-white mb-6 text-xl">Contact</h3>
+                        <ul className="space-y-5">
                             {settings.contact_email && (
-                                <li className="flex items-start gap-2">
-                                    <Mail className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                                    <a href={`mailto:${settings.contact_email}`} className="text-slate-400 hover:text-white text-sm transition-colors break-all">
+                                <li className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center shrink-0 border border-slate-700/50">
+                                        <Mail className="w-4 h-4 text-amber-500/80" />
+                                    </div>
+                                    <a href={`mailto:${settings.contact_email}`} className="text-slate-400 hover:text-white text-sm transition-colors break-all mt-1.5 font-light">
                                         {settings.contact_email}
                                     </a>
                                 </li>
                             )}
                             {settings.contact_phone && (
-                                <li className="flex items-center gap-2">
-                                    <Phone className="w-4 h-4 text-blue-400 shrink-0" />
-                                    <a href={`tel:${settings.contact_phone}`} className="text-slate-400 hover:text-white text-sm transition-colors">
+                                <li className="flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center shrink-0 border border-slate-700/50">
+                                        <Phone className="w-4 h-4 text-amber-500/80" />
+                                    </div>
+                                    <a href={`tel:${settings.contact_phone}`} className="text-slate-400 hover:text-white text-sm transition-colors font-light">
                                         {settings.contact_phone}
                                     </a>
                                 </li>
                             )}
                             {settings.whatsapp_number && (
-                                <li className="flex items-center gap-2">
-                                    <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <li className="flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center shrink-0 border border-slate-700/50">
+                                        <MessageCircle className="w-4 h-4 text-emerald-500/80" />
+                                    </div>
                                     <a
                                         href={`https://wa.me/${settings.whatsapp_number.replace(/\D/g, "")}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-slate-400 hover:text-white text-sm transition-colors"
+                                        className="text-slate-400 hover:text-white text-sm transition-colors font-light"
                                     >
-                                        WhatsApp
+                                        WhatsApp Connect
                                     </a>
                                 </li>
                             )}
                             {(settings.address_line1 || settings.address_line2) && (
-                                <li className="flex items-start gap-2">
-                                    <MapPin className="w-4 h-4 text-blue-400 mt-0.5 shrink-0" />
-                                    <span className="text-slate-400 text-sm leading-relaxed">
+                                <li className="flex items-start gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-slate-800/50 flex items-center justify-center shrink-0 border border-slate-700/50 mt-1">
+                                        <MapPin className="w-4 h-4 text-amber-500/80" />
+                                    </div>
+                                    <span className="text-slate-400 text-sm leading-relaxed font-light py-1">
                                         {settings.address_line1}
                                         {settings.address_line2 && <><br />{settings.address_line2}</>}
                                     </span>
@@ -150,13 +171,13 @@ export function Footer({ settings }: FooterProps) {
             </div>
 
             {/* Bottom Bar */}
-            <div className="border-t border-slate-700">
-                <div className="container mx-auto px-4 max-w-7xl py-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-                    <p className="text-xs text-slate-500 text-center sm:text-left">{copyright}</p>
-                    <div className="flex items-center gap-4 text-xs text-slate-500">
-                        <Link href="/about" className="hover:text-white transition-colors">About</Link>
-                        <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-                        <Link href="/downloads" className="hover:text-white transition-colors">Downloads</Link>
+            <div className="border-t border-slate-800/60 relative z-10 bg-[#070b15]/50 backdrop-blur-sm">
+                <div className="container mx-auto px-6 max-w-7xl py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <p className="text-sm text-slate-500 text-center sm:text-left font-light tracking-wide">{copyright}</p>
+                    <div className="flex items-center gap-6 text-sm text-slate-500 font-light">
+                        <Link href="/about" className="hover:text-amber-400 transition-colors">History</Link>
+                        <Link href="/contact" className="hover:text-amber-400 transition-colors">Support</Link>
+                        <Link href="/downloads" className="hover:text-amber-400 transition-colors">Documents</Link>
                     </div>
                 </div>
             </div>

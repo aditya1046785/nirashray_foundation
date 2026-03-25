@@ -27,60 +27,76 @@ export function TestimonialsSection({ settings }: TestimonialsProps) {
     const active = testimonials[current];
 
     return (
-        <section className="py-20 bg-gradient-to-b from-blue-50 to-white">
-            <div className="container mx-auto px-4 max-w-4xl">
+        <section className="py-32 bg-[#fffcf8] relative overflow-hidden">
+            {/* Soft paper noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+            
+            {/* Massive background Quote Icon decoration */}
+            <Quote className="absolute top-[20%] left-[10%] w-[400px] h-[400px] text-amber-100/40 -rotate-12 pointer-events-none stroke-[0.5]" />
+
+            <div className="container mx-auto px-6 max-w-5xl relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-14"
+                    className="text-center mb-16"
                 >
-                    <p className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">Testimonials</p>
-                    <h2 className="font-serif text-4xl font-bold text-slate-900">What People Say</h2>
+                    <p className="font-serif italic text-amber-600 text-xl tracking-wide mb-4">Testimonials</p>
+                    <h2 className="font-serif text-4xl lg:text-5xl font-bold text-slate-800 relative inline-block">
+                        What People Say
+                        <svg className="absolute -bottom-1 -left-1 w-[110%] h-3 text-amber-300 stroke-current opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0,5 Q50,-2 100,5" fill="none" strokeWidth="4" strokeLinecap="round" />
+                        </svg>
+                    </h2>
                 </motion.div>
 
                 <div className="relative">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={current}
-                            initial={{ opacity: 0, x: 40 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -40 }}
-                            transition={{ duration: 0.4 }}
-                            className="bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center"
+                            initial={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
+                            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
+                            exit={{ opacity: 0, filter: "blur(10px)", scale: 0.95 }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            className="text-center px-4 md:px-12"
                         >
-                            <Quote className="w-12 h-12 text-blue-100 mx-auto mb-6" />
-                            <p className="text-slate-700 text-xl md:text-2xl font-serif italic leading-relaxed mb-8">
+                            <p className="text-slate-700 text-2xl md:text-4xl font-serif italic leading-relaxed mb-10 text-balance max-w-4xl mx-auto font-light">
                                 &ldquo;{active.quote}&rdquo;
                             </p>
 
-                            {/* Stars */}
-                            <div className="flex justify-center gap-1 mb-6">
+                            {/* Elegant Stars */}
+                            <div className="flex justify-center gap-2 mb-8">
                                 {[...Array(5)].map((_, i) => (
-                                    <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
+                                    <Star key={i} className="w-5 h-5 text-amber-500 fill-amber-500" />
                                 ))}
                             </div>
 
                             {/* Avatar */}
-                            <div className="flex flex-col items-center gap-2">
-                                <div className="w-16 h-16 rounded-full overflow-hidden bg-blue-100">
-                                    {active.image ? (
-                                        <Image
-                                            src={active.image}
-                                            alt={active.name}
-                                            width={64}
-                                            height={64}
-                                            className="object-cover w-full h-full"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center font-bold text-blue-700 text-xl">
-                                            {getInitials(active.name)}
-                                        </div>
-                                    )}
+                            <div className="flex flex-col items-center gap-4">
+                                <div className="w-20 h-20 rounded-full overflow-hidden bg-[#fdfcfa] border border-amber-200 shadow-lg p-1">
+                                    <div className="w-full h-full rounded-full overflow-hidden relative">
+                                        {active.image ? (
+                                            <Image
+                                                src={active.image}
+                                                alt={active.name}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center font-bold text-slate-400 text-xl bg-slate-100">
+                                                {getInitials(active.name)}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-900">{active.name}</p>
-                                    <p className="text-slate-500 text-sm">{active.designation}</p>
+                                <div className="mt-2">
+                                    <p className="font-serif font-bold text-slate-800 text-xl mb-1">{active.name}</p>
+                                    <p className="text-slate-500 text-sm tracking-widest uppercase font-medium">{active.designation}</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -88,27 +104,27 @@ export function TestimonialsSection({ settings }: TestimonialsProps) {
 
                     {/* Navigation */}
                     {testimonials.length > 1 && (
-                        <div className="flex justify-center gap-4 mt-8 items-center">
+                        <div className="flex justify-center gap-6 mt-16 items-center">
                             <button
                                 onClick={prev}
-                                className="w-10 h-10 rounded-full border-2 border-blue-200 hover:border-blue-800 hover:bg-blue-50 flex items-center justify-center transition-colors"
+                                className="w-12 h-12 rounded-full border border-slate-200 hover:border-slate-800 hover:bg-slate-800 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300"
                             >
-                                <ChevronLeft className="w-5 h-5 text-blue-800" />
+                                <ChevronLeft className="w-5 h-5" />
                             </button>
-                            <div className="flex gap-2">
+                            <div className="flex gap-3">
                                 {testimonials.map((_, i) => (
                                     <button
                                         key={i}
                                         onClick={() => setCurrent(i)}
-                                        className={`w-2 h-2 rounded-full transition-all duration-300 ${i === current ? "w-6 bg-blue-800" : "bg-blue-200"}`}
+                                        className={`w-2 h-2 rounded-full transition-all duration-500 ${i === current ? "w-8 bg-amber-500" : "bg-slate-200 hover:bg-slate-300"}`}
                                     />
                                 ))}
                             </div>
                             <button
                                 onClick={next}
-                                className="w-10 h-10 rounded-full border-2 border-blue-200 hover:border-blue-800 hover:bg-blue-50 flex items-center justify-center transition-colors"
+                                className="w-12 h-12 rounded-full border border-slate-200 hover:border-slate-800 hover:bg-slate-800 text-slate-500 hover:text-white flex items-center justify-center transition-all duration-300"
                             >
-                                <ChevronRight className="w-5 h-5 text-blue-800" />
+                                <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>
                     )}

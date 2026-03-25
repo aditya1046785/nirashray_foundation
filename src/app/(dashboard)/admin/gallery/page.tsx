@@ -1,16 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Plus, Loader2, Trash2, Images } from "lucide-react";
+import { Plus, Trash2, Images } from "lucide-react";
+import Link from "next/link";
 import Image from "next/image";
 
 interface Album {
@@ -22,9 +18,6 @@ interface Album {
 export default function AdminGalleryPage() {
     const [albums, setAlbums] = useState<Album[]>([]);
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const { register, handleSubmit, reset } = useForm();
 
     const fetch_ = useCallback(async () => {
         setLoading(true);
@@ -36,17 +29,7 @@ export default function AdminGalleryPage() {
 
     useEffect(() => { fetch_(); }, [fetch_]);
 
-    const onSubmit = async (data: any) => {
-        setSaving(true);
-        const res = await fetch("/api/gallery/albums", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
-        const result = await res.json();
-        if (result.success) { toast.success("Album created!"); reset(); setDialogOpen(false); fetch_(); }
-        else toast.error(result.error || "Failed.");
-        setSaving(false);
-    };
+    useEffect(() => { fetch_(); }, [fetch_]);
 
     const handleDelete = async (id: string) => {
         if (!confirm("Delete this album and all photos?")) return;
@@ -62,23 +45,11 @@ export default function AdminGalleryPage() {
                     <h1 className="font-serif text-2xl font-bold text-slate-900">Gallery Albums</h1>
                     <p className="text-slate-500 text-sm mt-1">Manage photo albums</p>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-blue-800 hover:bg-blue-900 text-white"><Plus className="w-4 h-4 mr-2" /> New Album</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader><DialogTitle>Create Album</DialogTitle></DialogHeader>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div><Label>Title *</Label><Input {...register("title")} /></div>
-                            <div><Label>Slug *</Label><Input {...register("slug")} /></div>
-                            <div><Label>Description</Label><Textarea {...register("description")} rows={2} /></div>
-                            <div><Label>Cover Image URL</Label><Input {...register("coverImage")} /></div>
-                            <Button type="submit" disabled={saving} className="w-full bg-blue-800 hover:bg-blue-900 text-white">
-                                {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Creating...</> : <><Images className="w-4 h-4 mr-2" /> Create Album</>}
-                            </Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                <Button asChild className="bg-blue-800 hover:bg-blue-900 text-white">
+                    <Link href="/admin/gallery/new">
+                        <Plus className="w-4 h-4 mr-2" /> Upload Photo
+                    </Link>
+                </Button>
             </div>
 
             <Card className="border-0 shadow-sm">

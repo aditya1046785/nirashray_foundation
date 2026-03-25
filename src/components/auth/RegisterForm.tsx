@@ -51,129 +51,152 @@ export function RegisterForm() {
     if (success) {
         return (
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-4"
+                initial={{ opacity: 0, scale: 0.95, filter: "blur(5px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                className="text-center py-6"
             >
-                <div className="w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-emerald-400" />
+                <div className="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                    <CheckCircle className="w-10 h-10 text-emerald-500" />
                 </div>
-                <h3 className="text-white font-serif text-xl font-bold mb-2">Registration Successful!</h3>
-                <p className="text-blue-200 text-sm mb-6">
-                    A welcome email has been sent. Your membership is pending admin approval.
+                <h3 className="text-slate-800 font-serif text-3xl font-bold mb-4">Registration Successful!</h3>
+                <p className="text-slate-500 text-base mb-8 font-light leading-relaxed">
+                    A welcome email has been sent. Your membership is currently pending admin approval.
                 </p>
                 <Button
                     onClick={() => router.push("/login")}
-                    className="bg-amber-500 hover:bg-amber-400 text-white"
+                    variant="outline"
+                    className="rounded-full px-8 py-6 text-base font-medium text-slate-700 border-2 border-slate-200 hover:border-slate-800 hover:bg-transparent transition-all duration-300 shadow-none w-full"
                 >
-                    Go to Login
+                    Proceed to Login
                 </Button>
             </motion.div>
         );
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
-                <Label className="text-white/80 text-sm mb-1.5 block">Full Name *</Label>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Full Name *</Label>
                 <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         {...register("name")}
                         placeholder="Your full name"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-amber-400"
+                        className="pl-12 h-14 rounded-2xl bg-slate-50/50 border-slate-200 text-slate-800 placeholder:text-slate-400 focus-visible:ring-amber-500 shadow-sm transition-all"
                     />
                 </div>
-                {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name.message}</p>}
+                {errors.name && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.name.message}</p>}
             </div>
 
             <div>
-                <Label className="text-white/80 text-sm mb-1.5 block">Email Address *</Label>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Email Address *</Label>
                 <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         {...register("email")}
                         type="email"
                         placeholder="your@email.com"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-amber-400"
+                        className="pl-12 h-14 rounded-2xl bg-slate-50/50 border-slate-200 text-slate-800 placeholder:text-slate-400 focus-visible:ring-amber-500 shadow-sm transition-all"
                     />
                 </div>
-                {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
+                {errors.email && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.email.message}</p>}
             </div>
 
             <div>
-                <Label className="text-white/80 text-sm mb-1.5 block">Phone Number</Label>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Phone Number</Label>
                 <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         {...register("phone")}
                         type="tel"
                         placeholder="10-digit mobile number"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-amber-400"
+                        className="pl-12 h-14 rounded-2xl bg-slate-50/50 border-slate-200 text-slate-800 placeholder:text-slate-400 focus-visible:ring-amber-500 shadow-sm transition-all"
                     />
                 </div>
-                {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone.message}</p>}
+                {errors.phone && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.phone.message}</p>}
             </div>
 
             <div>
-                <Label className="text-white/80 text-sm mb-1.5 block">Password *</Label>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Register As *</Label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <select
+                        {...register("position")}
+                        className="w-full h-14 pl-4 pr-10 rounded-2xl bg-slate-50/50 border border-slate-200 text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 shadow-sm transition-all appearance-none"
+                    >
+                        <option value="">Select your position...</option>
+                        <option value="Volunteer">Volunteer</option>
+                        <option value="Manager">Manager</option>
+                        <option value="General Member">General Member</option>
+                        <option value="Team Member">Team Member</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                        <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                </div>
+                {errors.position && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.position.message as string}</p>}
+            </div>
+
+            <div>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Password *</Label>
+                <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         {...register("password")}
                         type={showPassword ? "text" : "password"}
                         placeholder="Min 8 chars, 1 uppercase, 1 number"
-                        className="pl-10 pr-10 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-amber-400"
+                        className="pl-12 pr-12 h-14 rounded-2xl bg-slate-50/50 border-slate-200 text-slate-800 placeholder:text-slate-400 focus-visible:ring-amber-500 shadow-sm transition-all text-sm"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
                     >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                 </div>
-                {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
+                {errors.password && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.password.message}</p>}
             </div>
 
             <div>
-                <Label className="text-white/80 text-sm mb-1.5 block">Confirm Password *</Label>
+                <Label className="text-xs font-semibold text-slate-500 mb-2 block tracking-widest uppercase ml-1">Confirm Password *</Label>
                 <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <Input
                         {...register("confirmPassword")}
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Re-enter password"
-                        className="pl-10 bg-white/10 border-white/20 text-white placeholder:text-white/30 focus:border-amber-400"
+                        className="pl-12 h-14 rounded-2xl bg-slate-50/50 border-slate-200 text-slate-800 placeholder:text-slate-400 focus-visible:ring-amber-500 shadow-sm transition-all text-sm"
                     />
                 </div>
-                {errors.confirmPassword && <p className="text-red-400 text-xs mt-1">{errors.confirmPassword.message}</p>}
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1.5 ml-2 font-medium">{errors.confirmPassword.message}</p>}
             </div>
 
-            <div className="flex items-start gap-3">
+            <div className="flex items-start gap-3 pt-2">
                 <input
                     type="checkbox"
                     id="agreeToTerms"
                     {...register("agreeToTerms")}
-                    className="mt-1 w-4 h-4 accent-amber-400 cursor-pointer"
+                    className="mt-1 w-4 h-4 rounded border-slate-300 text-amber-500 focus:ring-amber-500 cursor-pointer"
                 />
-                <label htmlFor="agreeToTerms" className="text-white/60 text-xs leading-relaxed cursor-pointer">
-                    I agree to the terms & conditions. My membership will be activated after admin approval.
+                <label htmlFor="agreeToTerms" className="text-slate-500 text-sm font-light leading-relaxed cursor-pointer select-none">
+                    I agree to the foundation rules. Note: Registration requires subsequent admin approval.
                 </label>
             </div>
-            {errors.agreeToTerms && <p className="text-red-400 text-xs -mt-2">{errors.agreeToTerms.message}</p>}
+            {errors.agreeToTerms && <p className="text-red-500 text-xs -mt-1 ml-2 font-medium">{errors.agreeToTerms.message}</p>}
 
-            <Button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-amber-500 hover:bg-amber-400 text-white font-bold py-3 mt-2"
-            >
-                {isLoading ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Registering...</>
-                ) : (
-                    "Create Account"
-                )}
-            </Button>
+            <div className="pt-2">
+                <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full h-14 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-lg font-bold shadow-lg shadow-slate-900/10 transition-all duration-300 hover:scale-[1.02]"
+                >
+                    {isLoading ? (
+                        <><Loader2 className="w-5 h-5 mr-3 animate-spin text-amber-500" /> Processing...</>
+                    ) : (
+                        "Submit Application"
+                    )}
+                </Button>
+            </div>
         </form>
     );
 }

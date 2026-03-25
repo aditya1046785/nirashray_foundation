@@ -8,7 +8,7 @@ export default async function MemberDashboardLayout({ children }: { children: Re
     if (!session?.user) redirect("/login");
 
     return (
-        <div className="flex h-screen bg-slate-50 overflow-hidden">
+        <div className="flex h-screen bg-[#fdfcfa] font-light overflow-hidden">
             <MemberSidebar />
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 <DashboardHeader user={session.user} />

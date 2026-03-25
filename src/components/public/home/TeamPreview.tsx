@@ -36,48 +36,67 @@ export function TeamPreview({ settings, members }: TeamPreviewProps) {
     ] as const;
 
     return (
-        <section className="py-20 bg-white">
-            <div className="container mx-auto px-4 max-w-7xl">
+        <section className="py-24 bg-[#fffdfa] relative overflow-hidden">
+            {/* Soft paper noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+            {/* Artistic Paint Splash */}
+            <motion.div 
+                animate={{ rotate: -360, scale: [1, 1.1, 1] }} 
+                transition={{ duration: 55, repeat: Infinity, ease: "linear" }}
+                className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-amber-100/40 rounded-full mix-blend-multiply filter blur-[90px] pointer-events-none"
+            />
+
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-14"
+                    className="text-center mb-16"
                 >
-                    <p className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">Our People</p>
-                    <h2 className="font-serif text-4xl font-bold text-slate-900 mb-4">{heading}</h2>
-                    <p className="text-slate-500 max-w-xl mx-auto">{subtext}</p>
+                    <p className="font-serif italic text-amber-600 text-xl tracking-wide mb-4">Our People</p>
+                    <h2 className="font-serif text-4xl lg:text-5xl font-bold text-slate-800 mb-6 tracking-tight relative inline-block">
+                        {heading}
+                        <svg className="absolute -bottom-1 -left-1 w-[110%] h-3 text-amber-300 stroke-current opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0,5 Q50,-2 100,5" fill="none" strokeWidth="4" strokeLinecap="round" />
+                        </svg>
+                    </h2>
+                    <p className="text-slate-500 max-w-xl mx-auto font-light text-lg">{subtext}</p>
                 </motion.div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                     {members.map((member, idx) => (
                         <motion.div
                             key={member.id}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: idx * 0.1 }}
-                            className="group relative bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                            transition={{ delay: idx * 0.1, duration: 0.8 }}
+                            className="group relative flex flex-col items-center"
                         >
-                            {/* Photo */}
-                            <div className="aspect-square relative bg-slate-100">
+                            {/* Photo with artistic portrait framing */}
+                            <div className="aspect-[3/4] w-full relative bg-slate-100 rounded-[2rem_1rem_3rem_1rem] overflow-hidden mb-6 shadow-md transition-all duration-500 group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.2)] group-hover:rounded-[1rem_3rem_1rem_2rem]">
                                 {member.photo ? (
                                     <Image
                                         src={member.photo}
                                         alt={member.name}
                                         fill
-                                        className="object-cover"
+                                        className="object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-700 ease-out"
                                         sizes="(max-width: 768px) 50vw, 25vw"
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-blue-50">
-                                        <span className="font-serif font-bold text-3xl text-blue-300">
+                                    <div className="w-full h-full flex items-center justify-center bg-[#fdfcfa]">
+                                        <span className="font-serif font-bold text-4xl text-amber-200">
                                             {getInitials(member.name)}
                                         </span>
                                     </div>
                                 )}
-                                {/* Social overlay */}
-                                <div className="absolute inset-0 bg-blue-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                {/* Elegant Social overlay */}
+                                <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center gap-3 backdrop-blur-[2px]">
                                     {socialIcons.map(({ key, Icon }) =>
                                         member[key] ? (
                                             <a
@@ -85,31 +104,32 @@ export function TeamPreview({ settings, members }: TeamPreviewProps) {
                                                 href={member[key]!}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="w-8 h-8 rounded-full bg-white/20 hover:bg-white flex items-center justify-center transition-colors group/icon"
+                                                className="w-10 h-10 rounded-full bg-white/10 hover:bg-slate-900 flex items-center justify-center transition-all duration-300 border border-white/40 hover:border-amber-400 group/icon"
                                                 onClick={(e) => e.stopPropagation()}
                                             >
-                                                <Icon className="w-3.5 h-3.5 text-white group-hover/icon:text-blue-800" />
+                                                <Icon className="w-4 h-4 text-white group-hover/icon:text-amber-400" />
                                             </a>
                                         ) : null
                                     )}
                                 </div>
                             </div>
 
-                            {/* Info */}
-                            <div className="p-4">
-                                <p className="font-semibold text-slate-900 text-sm leading-tight">{member.name}</p>
-                                <p className="text-blue-700 text-xs mt-0.5">{member.role}</p>
-                                <span className="inline-block mt-1 text-xs text-slate-400">{member.category}</span>
+                            {/* Info Component */}
+                            <div className="text-center w-full">
+                                <p className="font-serif font-bold text-slate-900 text-xl tracking-wide mb-1 transition-colors group-hover:text-amber-700">{member.name}</p>
+                                <p className="text-amber-600 text-sm font-medium tracking-widest uppercase">{member.role}</p>
+                                <div className="w-12 h-[1px] bg-slate-200 mx-auto my-3 group-hover:w-full group-hover:bg-amber-300 transition-all duration-500" />
+                                <span className="inline-block text-xs text-slate-400 italic">"{member.category}"</span>
                             </div>
                         </motion.div>
                     ))}
                 </div>
 
-                <div className="text-center mt-10">
+                <div className="text-center mt-20">
                     <Link href="/team">
-                        <Button variant="outline" className="border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white">
-                            View All Team Members
-                            <ArrowRight className="w-4 h-4 ml-2" />
+                        <Button variant="ghost" className="rounded-full px-8 py-6 text-base font-medium text-slate-700 border-2 border-slate-200 hover:border-slate-800 hover:bg-transparent transition-all duration-300 group shadow-none">
+                            Meet The Full Team
+                            <ArrowRight className="w-4 h-4 ml-2 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </Button>
                     </Link>
                 </div>

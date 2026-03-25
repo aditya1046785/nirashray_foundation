@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/public/home/HeroSection";
 import { ImpactStats } from "@/components/public/home/ImpactStats";
 import { AboutBrief } from "@/components/public/home/AboutBrief";
 import { CausesSection } from "@/components/public/home/CausesSection";
+import { CrowdfundingSection } from "@/components/public/home/CrowdfundingSection";
 import { DonateCTA } from "@/components/public/home/DonateCTA";
 import { TeamPreview } from "@/components/public/home/TeamPreview";
 import { GalleryPreview } from "@/components/public/home/GalleryPreview";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-    const [settings, teamMembers, recentBlogs, galleryAlbums] = await Promise.all([
+    const [settings, teamMembers, recentBlogs, galleryAlbums, activeCampaigns] = await Promise.all([
         getAllSiteSettings(),
         prisma.teamMember.findMany({
             where: { isVisible: true },
@@ -35,6 +36,11 @@ export default async function HomePage() {
             take: 3,
             orderBy: { displayOrder: "asc" },
         }),
+        prisma.crowdfundingCampaign.findMany({
+            where: { isActive: true },
+            orderBy: { createdAt: "desc" },
+            take: 4,
+        }),
     ]);
 
     return (
@@ -43,6 +49,7 @@ export default async function HomePage() {
             <ImpactStats settings={settings} />
             <AboutBrief settings={settings} />
             <CausesSection settings={settings} />
+            {activeCampaigns.length > 0 && <CrowdfundingSection campaigns={activeCampaigns} />}
             <DonateCTA settings={settings} />
             {teamMembers.length > 0 && <TeamPreview settings={settings} members={teamMembers} />}
             {galleryAlbums.length > 0 && <GalleryPreview settings={settings} albums={galleryAlbums} />}

@@ -17,6 +17,7 @@ export const registerSchema = z
             .string()
             .transform((val) => val === "" ? undefined : val)
             .pipe(z.string().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian phone number").optional()),
+        position: z.enum(["Volunteer", "Manager", "General Member", "Team Member"]),
         password: z.string().min(8, "Password must be at least 8 characters"),
         confirmPassword: z.string(),
         agreeToTerms: z.boolean().refine((val) => val === true, "You must agree to the terms"),

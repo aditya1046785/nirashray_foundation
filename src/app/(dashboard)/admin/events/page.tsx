@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { toast } from "sonner";
 import { Plus, Loader2, Calendar, Trash2 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import Link from "next/link";
 import type { z } from "zod";
 
 type EventFormData = z.input<typeof eventSchema>;
@@ -77,48 +78,11 @@ export default function AdminEventsPage() {
                     <h1 className="font-serif text-2xl font-bold text-slate-900">Events</h1>
                     <p className="text-slate-500 text-sm mt-1">Manage upcoming and past events</p>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-blue-800 hover:bg-blue-900 text-white">
-                            <Plus className="w-4 h-4 mr-2" /> Add Event
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg">
-                        <DialogHeader><DialogTitle>Create New Event</DialogTitle></DialogHeader>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div>
-                                <Label>Title *</Label>
-                                <Input {...register("title")} placeholder="Event title" />
-                                {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
-                            </div>
-                            <div>
-                                <Label>Description *</Label>
-                                <Textarea {...register("description")} rows={3} />
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <Label>Date *</Label>
-                                    <Input {...register("date")} type="date" />
-                                </div>
-                                <div>
-                                    <Label>Time *</Label>
-                                    <Input {...register("time")} placeholder="10:00 AM" />
-                                </div>
-                            </div>
-                            <div>
-                                <Label>Venue *</Label>
-                                <Input {...register("venue")} placeholder="Event venue" />
-                            </div>
-                            <div>
-                                <Label>Image URL</Label>
-                                <Input {...register("image")} placeholder="https://..." />
-                            </div>
-                            <Button type="submit" disabled={saving} className="w-full bg-blue-800 hover:bg-blue-900 text-white">
-                                {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : "Create Event"}
-                            </Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                <Button asChild className="bg-blue-800 hover:bg-blue-900 text-white">
+                    <Link href="/admin/events/new">
+                        <Plus className="w-4 h-4 mr-2" /> Add Event
+                    </Link>
+                </Button>
             </div>
 
             <Card className="border-0 shadow-sm">
@@ -145,7 +109,7 @@ export default function AdminEventsPage() {
                                         <TableRow key={event.id} className="hover:bg-slate-50">
                                             <TableCell>
                                                 <p className="text-sm font-medium text-slate-800">{event.title}</p>
-                                                <p className="text-xs text-slate-400 line-clamp-1">{event.description}</p>
+                                                <div className="text-xs text-slate-400 line-clamp-1 prose-sm prose-slate prose-p:my-0 prose-headings:my-0" dangerouslySetInnerHTML={{ __html: event.description }} />
                                             </TableCell>
                                             <TableCell>
                                                 <p className="text-sm text-slate-600">{formatDate(new Date(event.date))}</p>

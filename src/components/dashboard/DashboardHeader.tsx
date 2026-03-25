@@ -1,7 +1,7 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { Bell, LogOut, ChevronDown, User } from "lucide-react";
+import { Bell, LogOut, ChevronDown, User, Globe } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,58 +24,61 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ user }: DashboardHeaderProps) {
     return (
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0">
+        <header className="h-[72px] bg-white/70 backdrop-blur-md border-b border-amber-200/40 flex items-center justify-between pl-14 pr-4 md:px-6 shrink-0 relative z-20">
             {/* Breadcrumb / App name */}
             <div className="flex items-center gap-2">
-                <h2 className="font-semibold text-slate-800 text-sm">Admin Dashboard</h2>
+                <h2 className="font-serif italic text-amber-700 tracking-wide text-[15px]">Nirashray Workspace</h2>
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
                 {/* Notifications */}
-                <Button variant="ghost" size="icon" className="relative text-slate-500 hover:text-slate-900">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500" />
+                <Button variant="ghost" size="icon" className="relative group hover:bg-amber-50 rounded-xl transition-all w-10 h-10">
+                    <Bell className="w-5 h-5 text-slate-500 group-hover:text-amber-600 transition-colors" strokeWidth={1.5} />
+                    <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50" />
                 </Button>
 
                 {/* User menu */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <button className="flex items-center gap-2 hover:bg-slate-50 px-3 py-2 rounded-xl transition-colors">
-                            <Avatar className="w-8 h-8">
+                        <button className="flex items-center gap-3 hover:bg-white/50 border border-transparent hover:border-amber-100 px-2 py-1.5 rounded-[1.25rem] transition-all focus:outline-none focus:ring-2 focus:ring-amber-200/50">
+                            <Avatar className="w-9 h-9 border border-amber-100 shadow-sm">
                                 <AvatarImage src={user.image || undefined} />
-                                <AvatarFallback className="bg-blue-100 text-blue-800 text-xs font-bold">
+                                <AvatarFallback className="bg-amber-50 text-amber-700 text-xs font-bold font-serif">
                                     {getInitials(user.name || user.email || "U")}
                                 </AvatarFallback>
                             </Avatar>
-                            <div className="text-left hidden sm:block">
-                                <p className="text-sm font-medium text-slate-800 leading-none">{user.name}</p>
-                                <p className="text-xs text-slate-500 mt-0.5">{ROLE_LABELS[user.role as keyof typeof ROLE_LABELS] || user.role}</p>
+                            <div className="text-left hidden sm:block mr-1">
+                                <p className="text-[13px] font-bold text-slate-800 leading-none mb-0.5 tracking-tight">{user.name}</p>
+                                <p className="text-[10px] text-amber-600 tracking-widest uppercase font-semibold">{ROLE_LABELS[user.role as keyof typeof ROLE_LABELS] || user.role}</p>
                             </div>
-                            <ChevronDown className="w-4 h-4 text-slate-400" />
+                            <ChevronDown className="w-4 h-4 text-slate-400 mr-1" />
                         </button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-52">
-                        <DropdownMenuLabel>
-                            <p className="text-xs text-slate-500">{user.email}</p>
+                    <DropdownMenuContent align="end" className="w-56 rounded-2xl border-amber-100 shadow-xl overflow-hidden p-1 bg-white/95 backdrop-blur-md">
+                        <DropdownMenuLabel className="px-3 py-2.5">
+                            <p className="text-xs text-slate-500 font-light truncate">{user.email}</p>
                         </DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem asChild>
-                            <Link href="/member/dashboard" className="cursor-pointer">
-                                <User className="w-4 h-4 mr-2" /> Member View
+                        <DropdownMenuSeparator className="bg-amber-100/50 mx-2" />
+                        <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-amber-50 hover:text-amber-800 focus:bg-amber-50 focus:text-amber-800 transition-colors mx-1 my-0.5 px-3 py-2.5">
+                            <Link href="/member/dashboard">
+                                <User className="w-4 h-4 mr-2.5 opacity-70" strokeWidth={2} /> 
+                                <span className="font-medium text-sm">Member View</span>
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href="/" className="cursor-pointer">
-                                <User className="w-4 h-4 mr-2" /> View Website
+                        <DropdownMenuItem asChild className="cursor-pointer rounded-xl hover:bg-amber-50 hover:text-amber-800 focus:bg-amber-50 focus:text-amber-800 transition-colors mx-1 my-0.5 px-3 py-2.5">
+                            <Link href="/">
+                                <Globe className="w-4 h-4 mr-2.5 opacity-70" strokeWidth={2} /> 
+                                <span className="font-medium text-sm">View Website</span>
                             </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+                        <DropdownMenuSeparator className="bg-amber-100/50 mx-2" />
                         <DropdownMenuItem
                             onClick={() => signOut({ callbackUrl: "/login" })}
-                            className="text-red-600 cursor-pointer focus:text-red-700"
+                            className="text-red-500 cursor-pointer rounded-xl hover:bg-red-50 hover:text-red-600 focus:bg-red-50 focus:text-red-600 transition-colors mx-1 my-0.5 px-3 py-2.5 font-medium"
                         >
-                            <LogOut className="w-4 h-4 mr-2" /> Sign Out
+                            <LogOut className="w-4 h-4 mr-2.5" strokeWidth={2} /> 
+                            <span className="text-sm">Sign Out securely</span>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>

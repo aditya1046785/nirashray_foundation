@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { GraduationCap, HeartPulse, Users, Heart, Home, Leaf, BookOpen, Star } from "lucide-react";
+import { GraduationCap, HeartPulse, Users, Heart, Home, Leaf, BookOpen, Star, ArrowRight } from "lucide-react";
 
 interface CausesProps {
     settings: Record<string, string>;
@@ -24,45 +24,73 @@ export function CausesSection({ settings }: CausesProps) {
 
     if (!causes.length) return null;
 
-    const colors = [
-        { bg: "bg-blue-50", icon: "text-blue-700", border: "border-blue-200", hover: "hover:border-blue-400" },
-        { bg: "bg-rose-50", icon: "text-rose-600", border: "border-rose-200", hover: "hover:border-rose-400" },
-        { bg: "bg-emerald-50", icon: "text-emerald-600", border: "border-emerald-200", hover: "hover:border-emerald-400" },
-    ];
-
     return (
-        <section ref={ref} className="py-20 bg-slate-50">
-            <div className="container mx-auto px-4 max-w-6xl">
+        <section ref={ref} className="py-32 bg-[#fdfcfa] relative overflow-hidden">
+            {/* Very faint background noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+
+            {/* Subtle watercolor blob */}
+            <motion.div 
+                animate={{ rotate: -360, scale: [1, 1.2, 1] }} 
+                transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+                className="absolute top-[20%] -right-[10%] w-[600px] h-[600px] bg-blue-100/30 rounded-full mix-blend-multiply filter blur-[100px] pointer-events-none"
+            />
+
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    className="text-center mb-14"
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className="text-center mb-24"
                 >
-                    <p className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">What We Do</p>
-                    <h2 className="font-serif text-4xl font-bold text-slate-900 mb-4">Our Causes</h2>
-                    <p className="text-slate-500 max-w-xl mx-auto">
-                        We focus on three core pillars that drive sustainable change in communities
+                    <p className="font-serif italic text-amber-600 text-xl tracking-wide mb-4">
+                        What We Do
+                    </p>
+                    <h2 className="font-serif text-4xl lg:text-5xl font-bold text-slate-800 mb-6 tracking-tight relative inline-block">
+                        Our Canvas of Impact
+                        <svg className="absolute -bottom-1 -left-1 w-[110%] h-3 text-amber-300 stroke-current opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0,5 Q50,-2 100,5" fill="none" strokeWidth="4" strokeLinecap="round" />
+                        </svg>
+                    </h2>
+                    <p className="text-slate-500 max-w-xl mx-auto font-light text-lg">
+                        We focus on three core pillars that drive sustainable change in communities, approaching every challenge with heart.
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
                     {causes.map((cause, idx) => {
-                        const c = colors[idx % colors.length];
                         const IconComponent = ICON_MAP[cause.icon] || Heart;
                         return (
                             <motion.div
                                 key={idx}
                                 initial={{ opacity: 0, y: 40 }}
                                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                                transition={{ delay: idx * 0.15 }}
-                                className={`bg-white rounded-3xl p-8 border-2 ${c.border} ${c.hover} transition-all duration-300 hover:-translate-y-2 hover:shadow-xl group`}
+                                transition={{ duration: 0.8, delay: idx * 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                className="relative group cursor-pointer"
                             >
-                                <div className={`w-16 h-16 rounded-2xl ${c.bg} flex items-center justify-center mb-6`}>
-                                    <IconComponent className={`w-8 h-8 ${c.icon}`} />
+                                {/* 01, 02, 03 Massive Background Number */}
+                                <div className="absolute -top-12 -left-6 font-serif text-8xl md:text-9xl font-bold text-slate-100 opacity-50 select-none group-hover:-translate-y-2 transition-transform duration-500">
+                                    0{idx + 1}
                                 </div>
-                                <h3 className="font-serif text-xl font-bold text-slate-900 mb-3">{cause.title}</h3>
-                                <p className="text-slate-500 leading-relaxed text-sm">{cause.description}</p>
+                                
+                                <div className="relative z-10 bg-white/40 backdrop-blur-md p-10 rounded-2xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-white/80">
+                                    <div className="w-14 h-14 rounded-full bg-[#fdfcfa] border border-amber-100 flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 group-hover:bg-amber-50 transition-all duration-500">
+                                        <IconComponent className="w-6 h-6 text-amber-500" />
+                                    </div>
+                                    <h3 className="font-serif text-2xl font-bold text-slate-800 mb-4">{cause.title}</h3>
+                                    <p className="text-slate-500 leading-relaxed font-light mb-8">{cause.description}</p>
+                                    
+                                    <div className="flex items-center text-sm font-medium text-amber-600 transition-colors">
+                                        Support This Cause
+                                        <ArrowRight className="w-4 h-4 ml-2 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300" />
+                                    </div>
+                                </div>
                             </motion.div>
                         );
                     })}

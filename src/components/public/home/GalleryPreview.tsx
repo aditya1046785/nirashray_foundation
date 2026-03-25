@@ -22,20 +22,42 @@ export function GalleryPreview({ settings, albums }: GalleryPreviewProps) {
     const subtext = settings.gallery_section_subtext || "Moments that define our journey";
 
     return (
-        <section className="py-20 bg-white">
-            <div className="container mx-auto px-4 max-w-7xl">
+        <section className="py-24 bg-[#fdfcfa] relative overflow-hidden">
+            {/* Subtle paper noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.2] pointer-events-none mix-blend-multiply"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+
+            {/* Watercolor Background Accent */}
+            <motion.div 
+                animate={{ rotate: 360, scale: [1, 1.1, 1] }} 
+                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                className="absolute top-[10%] -left-[10%] w-[500px] h-[500px] bg-amber-100/30 rounded-full mix-blend-multiply filter blur-[80px] pointer-events-none"
+            />
+
+            <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-14"
+                    className="text-center mb-16"
                 >
-                    <p className="text-blue-700 font-semibold text-sm uppercase tracking-widest mb-3">Gallery</p>
-                    <h2 className="font-serif text-4xl font-bold text-slate-900 mb-4">{heading}</h2>
-                    <p className="text-slate-500 max-w-xl mx-auto">{subtext}</p>
+                    <p className="font-serif italic text-amber-600 text-xl tracking-wide mb-4">
+                        Gallery
+                    </p>
+                    <h2 className="font-serif text-4xl lg:text-5xl font-bold text-slate-800 mb-6 tracking-tight relative inline-block">
+                        {heading}
+                        <svg className="absolute -bottom-1 -left-1 w-[110%] h-3 text-amber-300 stroke-current opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0,5 Q50,-2 100,5" fill="none" strokeWidth="4" strokeLinecap="round" />
+                        </svg>
+                    </h2>
+                    <p className="text-slate-500 max-w-xl mx-auto font-light text-lg">{subtext}</p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {albums.map((album, albumIdx) => {
                         const coverPhoto = album.coverImage || album.photos[0]?.imageUrl;
                         return (
@@ -44,17 +66,19 @@ export function GalleryPreview({ settings, albums }: GalleryPreviewProps) {
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: albumIdx * 0.1 }}
-                                className="group"
+                                transition={{ delay: albumIdx * 0.1, duration: 0.8 }}
+                                className={`group relative ${albumIdx === 1 ? 'md:mt-12' : ''}`}
                             >
                                 <Link href={`/gallery/${album.slug}`}>
-                                    <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 aspect-[4/3]">
+                                    {/* Artistic frame */}
+                                    <div className="relative overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-slate-100 border border-white/50"
+                                         style={{ borderRadius: albumIdx % 2 === 0 ? '2rem 1rem 4rem 1rem' : '1rem 3rem 1rem 2rem' }}>
                                         {coverPhoto ? (
                                             <Image
                                                 src={coverPhoto}
                                                 alt={album.title}
                                                 fill
-                                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                                className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                                 sizes="(max-width: 768px) 100vw, 33vw"
                                             />
                                         ) : (
@@ -62,10 +86,11 @@ export function GalleryPreview({ settings, albums }: GalleryPreviewProps) {
                                                 <Images className="w-12 h-12 text-slate-300" />
                                             </div>
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                                        <div className="absolute bottom-4 left-4 right-4">
-                                            <p className="font-semibold text-white text-sm">{album.title}</p>
-                                            <p className="text-white/70 text-xs">{album.photos.length} photos</p>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                                        
+                                        <div className="absolute bottom-6 left-6 right-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                                            <p className="font-serif font-bold text-white text-2xl mb-1">{album.title}</p>
+                                            <p className="text-amber-300 font-medium text-sm tracking-wide">{album.photos.length} photos</p>
                                         </div>
                                     </div>
                                 </Link>
@@ -74,11 +99,11 @@ export function GalleryPreview({ settings, albums }: GalleryPreviewProps) {
                     })}
                 </div>
 
-                <div className="text-center mt-10">
+                <div className="text-center mt-20">
                     <Link href="/gallery">
-                        <Button variant="outline" className="border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white">
+                        <Button variant="ghost" className="rounded-full px-8 py-6 text-base font-medium text-slate-700 border-2 border-slate-200 hover:border-slate-800 hover:bg-transparent transition-all duration-300 group shadow-none">
                             View Full Gallery
-                            <ArrowRight className="w-4 h-4 ml-2" />
+                            <ArrowRight className="w-4 h-4 ml-2 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
                         </Button>
                     </Link>
                 </div>

@@ -23,7 +23,7 @@ export default async function TeamPage() {
         orderBy: [{ displayOrder: "asc" }],
     }) as any;
 
-    // Group by category
+    // Group by category but maintain order of appearance
     const categories = [...new Set(members.map((m: TeamMemberType) => m.category))];
 
     const socialLinks = [
@@ -35,48 +35,90 @@ export default async function TeamPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
-            <div className="bg-gradient-to-r from-blue-900 to-blue-700 py-16 text-white text-center">
-                <div className="container mx-auto px-4 max-w-2xl">
-                    <h1 className="font-serif text-4xl font-bold mb-3">Our Team</h1>
-                    <p className="text-blue-200">The passionate people driving our mission forward</p>
+        <div className="min-h-screen bg-[#fdfcfa] relative overflow-hidden font-light pt-20">
+            {/* Subtle global paper noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply fixed"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
+
+            {/* Banner Section */}
+            <div className="relative py-24 text-center border-b border-amber-200/40">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[300px] bg-amber-50/60 rounded-full mix-blend-multiply filter blur-[100px] pointer-events-none" />
+                
+                <div className="container mx-auto px-6 max-w-4xl relative z-10">
+                    <p className="font-serif italic text-amber-600 text-xl tracking-wide mb-4">
+                        The People
+                    </p>
+                    <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 text-slate-800 tracking-tight relative inline-block">
+                        Our Team
+                        <svg className="absolute -bottom-1 -left-1 w-[110%] h-3 text-amber-300 stroke-current opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
+                            <path d="M0,5 Q50,-2 100,5" fill="none" strokeWidth="4" strokeLinecap="round" />
+                        </svg>
+                    </h1>
+                    <p className="text-slate-500 text-xl font-light max-w-2xl mx-auto leading-relaxed mt-4">
+                        Meet the passionate individuals driving our mission forward, changing lives one day at a time.
+                    </p>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 max-w-6xl py-12">
+            <div className="container mx-auto px-6 max-w-7xl py-20 relative z-10">
                 {categories.length === 0 ? (
-                    <p className="text-center text-slate-400 py-20">No team members added yet.</p>
+                    <div className="text-center py-20 bg-white/40 rounded-[2rem] border border-white/50 backdrop-blur-sm max-w-3xl mx-auto">
+                        <Instagram className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                        <p className="text-slate-500 font-light text-lg">Our team roster is currently being updated.</p>
+                    </div>
                 ) : (
                     categories.map((category) => (
-                        <div key={category} className="mb-14">
-                            <h2 className="font-serif text-2xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2">{category}</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <div key={category} className="mb-24 last:mb-10">
+                            {/* Elegant Category Header */}
+                            <div className="flex items-center gap-6 mb-12">
+                                <h2 className="font-serif text-3xl md:text-4xl font-bold text-slate-800 tracking-tight whitespace-nowrap">{category}</h2>
+                                <div className="h-px w-full bg-gradient-to-r from-amber-200 to-transparent flex-1 mt-2" />
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
                                 {members.filter(m => m.category === category).map((member) => (
-                                    <div key={member.id} className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                        <div className="aspect-square relative bg-slate-100">
-                                            {member.photo ? (
-                                                <Image src={member.photo} alt={member.name} fill className="object-cover" sizes="(max-width: 768px) 50vw, 25vw" />
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center bg-blue-50">
-                                                    <span className="font-serif font-bold text-3xl text-blue-300">{getInitials(member.name)}</span>
-                                                </div>
-                                            )}
-                                            {/* Social overlay */}
-                                            <div className="absolute inset-0 bg-blue-900/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                                {socialLinks.map(({ key, Icon }) =>
-                                                    member[key] ? (
-                                                        <a key={key} href={member[key]!} target="_blank" rel="noopener noreferrer"
-                                                            className="w-8 h-8 rounded-full bg-white/20 hover:bg-white flex items-center justify-center transition-colors group/icon">
-                                                            <Icon className="w-3.5 h-3.5 text-white group-hover/icon:text-blue-800" />
-                                                        </a>
-                                                    ) : null
+                                    <div key={member.id} className="group relative">
+                                        {/* Minimalist Asymmetrical Portrait Frame */}
+                                        <div className="relative pl-6 pb-6">
+                                            {/* Decorative Background Frame */}
+                                            <div className="absolute top-6 left-0 right-6 bottom-0 bg-amber-50/50 rounded-2xl transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-2" />
+                                            
+                                            <div className="relative aspect-[4/5] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl overflow-hidden border border-white z-10 group-hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500">
+                                                {member.photo ? (
+                                                    <Image src={member.photo} alt={member.name} fill className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-700" sizes="(max-width: 768px) 100vw, 33vw" />
+                                                ) : (
+                                                    <div className="w-full h-full flex items-center justify-center bg-amber-50/30">
+                                                        <span className="font-serif font-bold text-5xl text-amber-200">{getInitials(member.name)}</span>
+                                                    </div>
                                                 )}
+                                                
+                                                {/* Glassmorphism Social Overlay */}
+                                                <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center gap-3">
+                                                    {socialLinks.map(({ key, Icon }) =>
+                                                        member[key] ? (
+                                                            <a key={key} href={member[key]!} target="_blank" rel="noopener noreferrer"
+                                                                className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/90 hover:scale-110 flex items-center justify-center transition-all duration-300 group/icon">
+                                                                <Icon className="w-4 h-4 text-white group-hover/icon:text-amber-700 transition-colors" />
+                                                            </a>
+                                                        ) : null
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="p-4">
-                                            <p className="font-semibold text-slate-900 text-sm">{member.name}</p>
-                                            <p className="text-blue-700 text-xs mt-0.5">{member.role}</p>
-                                            {member.bio && <p className="text-slate-500 text-xs mt-2 line-clamp-2">{member.bio}</p>}
+                                        
+                                        {/* Text Info */}
+                                        <div className="pt-6 pl-4 border-l border-amber-200/40 group-hover:border-amber-400 transition-colors duration-500 relative z-10 ml-6">
+                                            <h3 className="font-serif font-bold text-2xl text-slate-800 tracking-tight group-hover:text-amber-700 transition-colors">{member.name}</h3>
+                                            <p className="text-amber-600 font-medium tracking-widest uppercase text-xs mt-2 relative inline-block">
+                                                {member.role}
+                                            </p>
+                                            {member.bio && (
+                                                <p className="text-slate-500 text-sm mt-4 font-light leading-relaxed line-clamp-3 group-hover:text-slate-600 transition-colors">{member.bio}</p>
+                                            )}
                                         </div>
                                     </div>
                                 ))}

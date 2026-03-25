@@ -10,45 +10,50 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-slate-900 flex items-center justify-center p-4">
-            {/* Background decoration */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-amber-400/5 blur-3xl" />
-                <div className="absolute -bottom-40 -left-40 w-96 h-96 rounded-full bg-blue-400/10 blur-3xl" />
-            </div>
+        <div className="min-h-screen bg-[#fdfcfa] flex items-center justify-center p-4 relative overflow-hidden font-light pt-20">
+            {/* Subtle paper noise */}
+            <div 
+                className="absolute inset-0 opacity-[0.25] pointer-events-none mix-blend-multiply fixed z-0"
+                style={{ 
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` 
+                }}
+            />
 
-            <div className="w-full max-w-md relative z-10">
-                {/* Logo */}
-                <div className="text-center mb-8">
-                    <Link href="/" className="inline-flex flex-col items-center gap-3">
-                        <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                            <Heart className="w-8 h-8 text-amber-400 fill-amber-400" />
+            {/* Glowing artistic background */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-amber-100/40 rounded-full mix-blend-multiply filter blur-[150px] pointer-events-none z-0" />
+
+            <div className="w-full max-w-md relative z-10 my-10">
+                {/* Logo & Header */}
+                <div className="text-center mb-8 relative">
+                    <Link href="/" className="inline-flex flex-col items-center group">
+                        <div className="w-16 h-16 rounded-full bg-amber-50 mx-auto flex items-center justify-center mb-6 shadow-sm border border-amber-100 group-hover:scale-105 transition-transform duration-500">
+                            <Heart className="w-7 h-7 text-amber-500 fill-amber-500/20" strokeWidth={1.5} />
                         </div>
-                        <div>
-                            <p className="font-serif text-2xl font-bold text-white">Nirashray Foundation</p>
-                            <p className="text-blue-300 text-sm">Empowering Lives, Building Hope</p>
-                        </div>
+                        <h1 className="font-serif text-3xl md:text-4xl font-bold text-slate-800 tracking-tight">Nirashray Foundation</h1>
+                        <p className="text-slate-500 text-sm mt-3 font-medium tracking-widest uppercase">Member Portal</p>
                     </Link>
                 </div>
 
-                {/* Card */}
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-                    <h1 className="font-serif text-2xl font-bold text-white text-center mb-2">Welcome Back</h1>
-                    <p className="text-blue-200 text-center text-sm mb-8">Sign in to your account</p>
+                {/* Form Card */}
+                <div className="bg-white/80 backdrop-blur-md border border-white shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] rounded-[2.5rem] p-8 md:p-10 relative overflow-hidden">
+                    <h2 className="font-serif text-2xl font-bold text-slate-800 text-center mb-2">Welcome Back</h2>
+                    <p className="text-slate-500 text-center text-sm mb-8 font-light">Securely sign in to your elegant dashboard</p>
+                    
                     <LoginForm />
                 </div>
 
-                <p className="text-center text-blue-300 text-sm mt-6">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/register" className="text-amber-400 font-semibold hover:underline">
-                        Register as a Member
+                {/* Footer Links */}
+                <div className="mt-8 text-center space-y-4 relative z-10">
+                    <p className="text-slate-500 text-sm font-light">
+                        Don&apos;t have an account?{" "}
+                        <Link href="/register" className="text-amber-600 font-semibold hover:text-amber-700 hover:underline decoration-amber-300 underline-offset-4 transition-colors">
+                            Apply for Membership
+                        </Link>
+                    </p>
+                    <Link href="/" className="inline-block text-slate-400 text-xs font-medium tracking-wide hover:text-slate-600 transition-colors uppercase">
+                        ← Return Home
                     </Link>
-                </p>
-                <p className="text-center mt-2">
-                    <Link href="/" className="text-blue-400 text-xs hover:text-white transition-colors">
-                        ← Back to Website
-                    </Link>
-                </p>
+                </div>
             </div>
         </div>
     );

@@ -1,24 +1,17 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { teamMemberSchema } from "@/lib/validations";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Plus, Loader2, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { TEAM_CATEGORIES } from "@/lib/constants";
 import Image from "next/image";
 import type { z } from "zod";
 
-type TeamFormData = z.input<typeof teamMemberSchema>;
+// Types are defined below
 
 interface TeamMember {
     id: string; name: string; role: string; category: string;
@@ -28,12 +21,6 @@ interface TeamMember {
 export default function AdminTeamPage() {
     const [members, setMembers] = useState<TeamMember[]>([]);
     const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<TeamFormData>({
-        resolver: zodResolver(teamMemberSchema) as any,
-        defaultValues: { category: "Core Team", displayOrder: 0, name: "", role: "", photo: "" },
-    });
 
     const fetch_ = useCallback(async () => {
         setLoading(true);
@@ -44,18 +31,6 @@ export default function AdminTeamPage() {
     }, []);
 
     useEffect(() => { fetch_(); }, [fetch_]);
-
-    const onSubmit = async (data: TeamFormData) => {
-        setSaving(true);
-        const res = await fetch("/api/team", {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
-        const result = await res.json();
-        if (result.success) { toast.success("Team member added!"); reset(); setDialogOpen(false); fetch_(); }
-        else toast.error(result.error || "Failed.");
-        setSaving(false);
-    };
 
     const handleDelete = async (id: string) => {
         if (!confirm("Remove this team member?")) return;
@@ -71,43 +46,11 @@ export default function AdminTeamPage() {
                     <h1 className="font-serif text-2xl font-bold text-slate-900">Team Members</h1>
                     <p className="text-slate-500 text-sm mt-1">Manage team display on the website</p>
                 </div>
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="bg-blue-800 hover:bg-blue-900 text-white"><Plus className="w-4 h-4 mr-2" /> Add Member</Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-lg">
-                        <DialogHeader><DialogTitle>Add Team Member</DialogTitle></DialogHeader>
-                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                            <div className="grid grid-cols-2 gap-3">
-                                <div><Label>Name *</Label><Input {...register("name")} />{errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}</div>
-                                <div><Label>Role *</Label><Input {...register("role")} placeholder="President" /></div>
-                            </div>
-                            <div>
-                                <Label>Category</Label>
-                                <Select defaultValue="Core Team" onValueChange={(v) => setValue("category", v)}>
-                                    <SelectTrigger><SelectValue /></SelectTrigger>
-                                    <SelectContent>
-                                        {TEAM_CATEGORIES.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div><Label>Photo URL</Label><Input {...register("photo")} placeholder="https://..." /></div>
-                            <div><Label>Bio</Label><Textarea {...register("bio")} rows={2} /></div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div><Label>Display Order</Label><Input {...register("displayOrder", { valueAsNumber: true })} type="number" /></div>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <div><Label>Instagram URL</Label><Input {...register("instagramUrl")} /></div>
-                                <div><Label>Facebook URL</Label><Input {...register("facebookUrl")} /></div>
-                                <div><Label>LinkedIn URL</Label><Input {...register("linkedinUrl")} /></div>
-                                <div><Label>Twitter URL</Label><Input {...register("twitterUrl")} /></div>
-                            </div>
-                            <Button type="submit" disabled={saving} className="w-full bg-blue-800 hover:bg-blue-900 text-white">
-                                {saving ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</> : "Add Team Member"}
-                            </Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
+                <Button asChild className="bg-blue-800 hover:bg-blue-900 text-white">
+                    <Link href="/admin/team/new">
+                        <Plus className="w-4 h-4 mr-2" /> Add Member
+                    </Link>
+                </Button>
             </div>
 
             <Card className="border-0 shadow-sm">

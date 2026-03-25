@@ -27,47 +27,60 @@ export default async function BlogPostPage({ params }: Props) {
     await prisma.blogPost.update({ where: { id: post.id }, data: { views: { increment: 1 } } });
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-[#fdfcfa] relative overflow-hidden">
+            {/* Background Texture */}
+            <div className="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply transition-opacity duration-1000" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.85\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }} />
+
             {/* Hero */}
-            <div className="relative bg-gradient-to-r from-blue-900 to-blue-700 py-20 text-white">
-                <div className="container mx-auto px-4 max-w-3xl">
-                    <Link href="/blog" className="inline-flex items-center gap-1 text-blue-300 hover:text-white text-sm mb-4 transition-colors">
-                        <ArrowLeft className="w-4 h-4" /> Back to Blog
+            <div className="relative pt-32 pb-24 px-4 border-b border-amber-900/10 bg-[#fffcf5] overflow-hidden">
+                <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[800px] h-[800px] bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 translate-y-1/3 -translate-x-1/4 w-[600px] h-[600px] bg-blue-300/10 rounded-full blur-3xl pointer-events-none" />
+                
+                <div className="container mx-auto max-w-3xl relative z-10 text-center">
+                    <Link href="/blog" className="inline-flex items-center gap-2 text-amber-700 hover:text-amber-900 text-sm mb-10 transition-colors uppercase tracking-widest font-semibold pb-1 border-b border-amber-700/30 hover:border-amber-900">
+                        <ArrowLeft className="w-4 h-4" strokeWidth={2} /> Back to Chronicle
                     </Link>
+                    
                     {post.category && (
-                        <span className="inline-block bg-white/20 text-white text-xs px-3 py-1 rounded-lg font-medium mb-3">{post.category}</span>
+                        <div className="mb-6 flex justify-center">
+                            <span className="inline-block bg-white border border-amber-200 text-amber-900 text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full font-bold shadow-sm">{post.category}</span>
+                        </div>
                     )}
-                    <h1 className="font-serif text-4xl font-bold mb-4 leading-tight">{post.title}</h1>
-                    <div className="flex items-center gap-4 text-blue-200 text-sm">
-                        {post.author && <span>By {post.author.name}</span>}
+                    
+                    <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-slate-900 mb-8 leading-[1.15] tracking-tight">{post.title}</h1>
+                    
+                    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-slate-500 font-medium text-sm">
+                        {post.author && <span className="text-slate-800">By <span className="font-semibold">{post.author.name}</span></span>}
                         {post.publishedAt && (
-                            <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{formatDate(post.publishedAt)}</span>
+                            <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-amber-600/70" />{formatDate(post.publishedAt)}</span>
                         )}
-                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{estimateReadingTime(post.content)} min read</span>
-                        <span className="flex items-center gap-1"><Eye className="w-3.5 h-3.5" />{post.views} views</span>
+                        <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-amber-600/70" />{estimateReadingTime(post.content)} min read</span>
+                        <span className="flex items-center gap-1.5"><Eye className="w-4 h-4 text-amber-600/70" />{post.views} views</span>
                     </div>
                 </div>
             </div>
 
             {/* Image */}
             {post.featuredImage && (
-                <div className="container mx-auto px-4 max-w-4xl -mt-8 relative z-10">
-                    <div className="rounded-2xl overflow-hidden shadow-2xl aspect-video relative">
-                        <Image src={post.featuredImage} alt={post.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 800px" />
+                <div className="container mx-auto px-4 max-w-5xl -mt-16 relative z-20">
+                    <div className="bg-white p-3 rounded-2xl shadow-2xl shadow-slate-900/10 border border-slate-100 transform -rotate-1 hover:rotate-0 transition-transform duration-700">
+                        <div className="rounded-xl overflow-hidden aspect-video relative border border-slate-100">
+                            <Image src={post.featuredImage} alt={post.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 1000px" priority />
+                        </div>
                     </div>
                 </div>
             )}
 
             {/* Content */}
-            <article className="container mx-auto px-4 max-w-3xl py-12">
-                <div className="prose prose-lg prose-slate max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
+            <article className="container mx-auto px-4 max-w-3xl py-20 relative z-10">
+                <div className="prose prose-lg prose-slate prose-headings:font-serif prose-headings:tracking-tight prose-a:text-amber-700 hover:prose-a:text-amber-800 prose-img:rounded-xl prose-img:shadow-md prose-blockquote:border-l-amber-500 prose-blockquote:bg-amber-50/50 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-xl max-w-none" dangerouslySetInnerHTML={{ __html: post.content }} />
 
                 {/* Tags */}
                 {post.tags && (
-                    <div className="flex flex-wrap gap-2 mt-10 pt-6 border-t border-slate-200">
-                        <Tag className="w-4 h-4 text-slate-400" />
+                    <div className="flex flex-wrap items-center gap-3 mt-16 pt-8 border-t border-slate-200/60">
+                        <Tag className="w-5 h-5 text-amber-600/60" strokeWidth={1.5} />
                         {post.tags.split(",").map((tag: string) => (
-                            <span key={tag} className="bg-slate-100 text-slate-600 text-xs px-3 py-1 rounded-full">{tag.trim()}</span>
+                            <span key={tag} className="bg-white border border-slate-200 shadow-sm text-slate-600 text-[11px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full hover:border-amber-300 hover:bg-amber-50 transition-colors cursor-default">{tag.trim()}</span>
                         ))}
                     </div>
                 )}

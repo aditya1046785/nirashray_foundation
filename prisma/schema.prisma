@@ -65,6 +65,7 @@ model User {
   password  String
   phone     String?
   role      Role     @default(MEMBER)
+  position  String?
   image     String?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -383,4 +384,46 @@ model SiteSettings {
   updatedAt DateTime @updatedAt
 
   @@index([key])
+}
+
+model CrowdfundingCampaign {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  target      Float
+  raised      Float    @default(0)
+  image       String
+  category    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  title     String        @default("Live Chat")
+  isLive    Boolean       @default(false)
+  startedAt DateTime?
+  endedAt   DateTime?
+  createdAt DateTime      @default(now())
+
+  messages ChatMessage[]
+
+  @@index([isLive])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  sessionId   String
+  senderName  String
+  senderRole  String
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([createdAt])
 }
